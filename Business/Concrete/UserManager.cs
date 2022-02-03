@@ -49,6 +49,7 @@ namespace Business.Concrete
         {
             var check = CheckOtherEmail(user.Email);
 
+
             var result = BusinessRules.Run(check);
 
             if (result != null)
