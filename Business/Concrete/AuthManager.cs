@@ -63,6 +63,7 @@ namespace Business.Concrete
             };
 
             _userService.Add(user);
+            _claimService.AddUser(user);
             return new SuccessDataResult<User>(user, Messages.SuccesRegister);
         }
 
@@ -84,11 +85,6 @@ namespace Business.Concrete
                 return new ErrorDataResult<User>(Messages.UserAlredyExist);
             }
             return new SuccessResult();
-        }
-
-        public IResult UserExists(string email)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -71,5 +71,9 @@ namespace Business.Constants
         internal static string EvaluationAdd;
         internal static string EvaluationDelete;
         internal static string EvaluationUpdate;
+        internal static string TokenAdd;
+        internal static string TokenDelete;
+        internal static string TokenUpdate;
+        internal static string InsufficientBalance;
     }
 }

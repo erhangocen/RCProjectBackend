@@ -30,6 +30,7 @@ namespace DataAccess.Concrete.EntityFramework.Contexts
         public DbSet<Bid> Bids { get; set; }
         public DbSet<BidImage> BidImages { get; set; }
         public DbSet<Evaluation> Evaluations { get; set; }
+        public DbSet<Token> Tokens { get; set; }
 
     }
 }

@@ -3,6 +3,7 @@ using Business.Constants;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using DataAccsess.Abstract;
+using Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,12 @@ namespace Business.Concrete
     public class ClaimManager : IClaimService
     {
         private IClaimDal _claimDal;
+        private ITokenService _tokenService;
 
-        public ClaimManager(IClaimDal claimDal)
+        public ClaimManager(IClaimDal claimDal, ITokenService tokenService)
         {
             _claimDal = claimDal;
+            _tokenService = tokenService;
         }
 
         public IResult Add(UserOperationClaim claim)
@@ -43,7 +46,15 @@ namespace Business.Concrete
                 OperationClaimId = 3,
                 UserId = user.UserId
             };
+
+            Token token = new Token()
+            {
+                TokenValue = 0,
+                UserId = user.UserId
+            };
+
             _claimDal.Add(claim);
+            _tokenService.Add(token);
             return new SuccessResult(Messages.AddClaim);
         }
 

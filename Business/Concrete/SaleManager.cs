@@ -12,14 +12,35 @@ namespace Business.Concrete
 {
     public class SaleManager : ISaleService
     {
-        ISaleDal _saleDal;
-        public SaleManager(ISaleDal saleDal)
+        private ISaleDal _saleDal;
+        private ITokenService _tokenService;
+        private IProductService _productService;
+
+        public SaleManager(ISaleDal saleDal, ITokenService tokenService, IProductService productService)
         {
             _saleDal = saleDal;
+            _tokenService = tokenService;
+            _productService = productService;
         }
 
         public IResult Add(Sale sale)
         {
+            Token t = _tokenService.GetByUserId(sale.UserId).Data;
+            Product p = _productService.GetById(sale.ProductId).Data;
+
+            if (t.TokenValue < p.SalePrice)
+            {
+                return new ErrorResult(Messages.InsufficientBalance);
+            }
+
+            Token token = new Token
+            {
+                Id = t.Id,
+                UserId = t.UserId,
+                TokenValue = t.TokenValue - p.SalePrice
+            };
+
+            _tokenService.Update(token);
             _saleDal.Add(sale);
             return new SuccessResult(Messages.SaleAdd);
         }

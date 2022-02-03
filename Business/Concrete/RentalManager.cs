@@ -16,10 +16,15 @@ namespace Business.Concrete
 {
     public class RentalManager : IRentalService
     {
-        IRentalDal _rentalDal;
-        public RentalManager(IRentalDal rentalDal)
+        private IRentalDal _rentalDal;
+        private ITokenService _tokenService;
+        private IProductService _productService;
+        
+        public RentalManager(IRentalDal rentalDal, ITokenService tokenService, IProductService productService)
         {
             _rentalDal = rentalDal;
+            _tokenService = tokenService;
+            _productService = productService;
         }
 
         [ValidationAspect(typeof(RentalValidator))]
@@ -30,6 +35,23 @@ namespace Business.Concrete
             {
                 return result;
             }
+
+            Token t = _tokenService.GetByUserId(rental.UserId).Data;
+            Product p = _productService.GetById(rental.ProductId).Data;
+
+            if (t.TokenValue < p.SalePrice)
+            {
+                return new ErrorResult(Messages.InsufficientBalance);
+            }
+
+            Token token = new Token
+            {
+                Id = t.Id,
+                UserId = t.UserId,
+                TokenValue = t.TokenValue - p.SalePrice
+            };
+
+            _tokenService.Update(token);
             _rentalDal.Add(rental);
             return new SuccessResult(Messages.RentalAdd);
         }

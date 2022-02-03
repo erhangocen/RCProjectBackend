@@ -21,8 +21,8 @@ namespace Business.ValidationRules.FluentValidation
 			RuleFor(u => u.FirstName.Length).GreaterThanOrEqualTo(3).WithMessage(Messages.NameInvalid);
 			RuleFor(u => u.LastName.Length).GreaterThanOrEqualTo(2).WithMessage(Messages.SurnameInvalid);
 			RuleFor(u => u.PasswordHash.Length).GreaterThanOrEqualTo(5).WithMessage(Messages.PasswordInvalid);
-			RuleFor(u =>u.Email).Must(isEmail).WithMessage(Messages.EmailInvalidd);
-        }
+			RuleFor(u => u.Email).Must(isEmail).WithMessage(Messages.EmailInvalidd);
+		}
 
         private bool isEmail(string arg)
 		{

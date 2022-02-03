@@ -31,10 +31,14 @@ namespace DataAccess.Concrete.EntityFramework
             using (RCProjectDBContext context = new RCProjectDBContext())
             {
                 var result = from u in context.Users.Where(u=>u.UserId == userId)
+                             join uoc in context.UserOperationClaims
+                             on u.UserId equals uoc.UserId
+                             join oc in context.OperationClaims
+                             on uoc.OperationClaimId equals oc.Id
                              select new UserDto
                              {
                                  UserId = u.UserId,
-                                 Claims = this.GetClaims(u),
+                                 Claim = oc.Name,
                                  FirstName = u.FirstName,
                                  LastName = u.LastName,
                                  Email = u.Email
@@ -48,10 +52,14 @@ namespace DataAccess.Concrete.EntityFramework
             using (RCProjectDBContext context = new RCProjectDBContext())
             {
                 var result = from u in context.Users
+                             join uoc in context.UserOperationClaims
+                             on u.UserId equals uoc.UserId
+                             join oc in context.OperationClaims
+                             on uoc.OperationClaimId equals oc.Id
                              select new UserDto
                              {
                                  UserId = u.UserId,
-                                 Claims = this.GetClaims(u),
+                                 Claim = oc.Name,
                                  FirstName = u.FirstName,
                                  LastName = u.LastName,
                                  Email = u.Email

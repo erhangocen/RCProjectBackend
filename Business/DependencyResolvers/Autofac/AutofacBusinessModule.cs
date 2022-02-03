@@ -60,6 +60,9 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<BidImageManager>().As<IBidImageService>();
             builder.RegisterType<EfBidImageDal>().As<IBidImageDal>();
 
+            builder.RegisterType<TokenManager>().As<ITokenService>();
+            builder.RegisterType<EfTokenDal>().As<ITokenDal>();
+
             builder.RegisterType<UserManager>().As<IUserService>();
             builder.RegisterType<EfUserDal>().As<IUserDal>();
 
