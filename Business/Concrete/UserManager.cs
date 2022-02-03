@@ -16,7 +16,7 @@ using Entities.Dtos;
 namespace Business.Concrete
 {
     public class UserManager:IUserService
-    {
+    { 
         private IUserDal _userDal;
         private IClaimService _claimService;
 

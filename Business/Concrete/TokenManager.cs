@@ -48,7 +48,7 @@ namespace Business.Concrete
 
         public IResult Update(Token token)
         {
-            _tokenDal.Update(token);  
+            _tokenDal.Update(token);   
             return new SuccessResult(Messages.TokenUpdate);
         }
     }
