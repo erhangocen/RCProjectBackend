@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,7 +53,9 @@ namespace WebAPI
                 );
             });
 
-            var tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
+            //var confirmationTokenOptions = Configuration.GetSection("ConfirmationTokenOptions").Get<Core.Utilities.EmailConfirmation.ConfirmationTokenOptions>();
+
+            var tokenOptions = Configuration.GetSection("TokenOptions").Get<Core.Utilities.Security.Jwt.TokenOptions>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
                 options =>

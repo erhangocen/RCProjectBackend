@@ -15,6 +15,7 @@ namespace Entities.Concrete
         public string Title { get; set; }
         public string Description { get; set; }
         public string BidValue { get; set; }
+        public DateTime BidDate { get; set; }
         public string Status { get; set; }
     }
 }

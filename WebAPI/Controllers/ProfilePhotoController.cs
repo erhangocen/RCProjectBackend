@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
-using Entities.Concrete;
+using Core.Entities.Concrete;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,18 +12,21 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BrandsController : ControllerBase
+    public class ProfilePhotoController : ControllerBase
     {
-        private IBrandService _brandService;
-        public BrandsController(IBrandService brandService)
+        IProfilePhotoService _profilePhotoService;
+        IWebHostEnvironment _webHostEnvironment;
+
+        public ProfilePhotoController(IProfilePhotoService profilePhotoService, IWebHostEnvironment webHostEnvironment)
         {
-            _brandService = brandService;
+            _profilePhotoService = profilePhotoService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet("getall")]
         public IActionResult GetAll()
         {
-            var result = _brandService.GetAll();
+            var result = _profilePhotoService.GetAll();
             if (result.Success)
             {
                 return Ok(result);
@@ -33,7 +37,7 @@ namespace WebAPI.Controllers
         [HttpGet("getbyid")]
         public IActionResult GetById(int id)
         {
-            var result = _brandService.GetByBrandId(id);
+            var result = _profilePhotoService.GetById(id);
             if (result.Success)
             {
                 return Ok(result);
@@ -41,44 +45,38 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("add")]
-        public IActionResult Add(Brand brand)
+        [HttpGet("getbyuserid")]
+        public IActionResult GetByUserId(int id)
         {
-            var result = _brandService.Add(brand);
-
+            var result = _profilePhotoService.GetByUserId(id);
             if (result.Success)
             {
                 return Ok(result);
             }
-
             return BadRequest(result);
         }
 
         [HttpPost("update")]
-        public IActionResult Update(Brand brand)
+        public IActionResult Add([FromForm(Name = ("Image"))] IFormFile file, [FromForm] ProfilePhoto profilephoto)
         {
-            var result = _brandService.Update(brand);
-
+            var result = _profilePhotoService.Update(file, profilephoto);
             if (result.Success)
             {
                 return Ok(result);
             }
-
             return BadRequest(result);
         }
 
         [HttpPost("delete")]
-        public IActionResult Delete(Brand brand)
+        public IActionResult Delete([FromForm(Name = ("ImageId"))] int id)
         {
-            var result = _brandService.Delete(brand);
-
+            var image = _profilePhotoService.GetById(id);
+            var result = _profilePhotoService.Delete(image.Data);
             if (result.Success)
             {
                 return Ok(result);
             }
-
             return BadRequest(result);
         }
-
     }
 }

@@ -12,8 +12,6 @@ namespace Business.Abstract
         IDataResult<List<UserOperationClaim>> GetByClaimId(int id);
         IDataResult<List<UserOperationClaim>> GetByUserId(int id);
         IResult Add(UserOperationClaim claim);
-        IResult AddUser(User user);
-        IResult AddEditor(User user);
         IResult Update(UserOperationClaim claim);
         IResult Delete(UserOperationClaim claim);
         IResult DeleteUser(User user);

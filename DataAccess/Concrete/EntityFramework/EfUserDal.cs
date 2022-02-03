@@ -41,6 +41,7 @@ namespace DataAccess.Concrete.EntityFramework
                                  Claim = oc.Name,
                                  FirstName = u.FirstName,
                                  LastName = u.LastName,
+                                 Username = u.Username,
                                  Email = u.Email
                              };
                 return result.FirstOrDefault();
@@ -62,6 +63,7 @@ namespace DataAccess.Concrete.EntityFramework
                                  Claim = oc.Name,
                                  FirstName = u.FirstName,
                                  LastName = u.LastName,
+                                 Username = u.Username,
                                  Email = u.Email
                              };
                 return result.ToList();

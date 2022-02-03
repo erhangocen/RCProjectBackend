@@ -11,6 +11,7 @@ namespace Business.Abstract
     {
         IDataResult<List<Sale>> GetAll();
         IDataResult<List<SaleDto>> GetFullSaleDetails();
+        IDataResult<List<SaleDto>> GetFullSaleDetailsByUserId(int id);
         IDataResult<List<Sale>> GetSalesByUserId(int id);
         IDataResult<Sale> GetById(int id);
         IResult Add(Sale sale);

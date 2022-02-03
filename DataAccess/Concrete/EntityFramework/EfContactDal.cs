@@ -24,6 +24,7 @@ namespace DataAccess.Concrete.EntityFramework
                                  Id = c.Id,
                                  UserId = u.UserId,
                                  FullName = u.FirstName + " " + u.LastName,
+                                 Username = u.Username,
                                  ContInfo = c.ContInfo,
                                  Message = c.Message,
                                  ImagePath = context.ProfilePhotos.Where(i => i.UserId == u.UserId).FirstOrDefault().ImagePath

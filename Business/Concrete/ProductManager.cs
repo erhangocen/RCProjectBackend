@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Business.BusinessAspects.Autofac;
+using Entities.Dtos;
+using System.Linq.Expressions;
 
 namespace Business.Concrete
 {
@@ -35,13 +37,14 @@ namespace Business.Concrete
         }
 
         //[PerformanceAspect(5)]
+        [CacheAspect]
         public IDataResult<List<Product>> GetAll()
         {
             //Thread.Sleep(5000);
             return new SuccessDataResult<List<Product>>(_productDal.GetAll());
         }
 
-        //[SecuredOperation("Product.List,Admin")]
+        //[SecuredOperation("Admin")]
         [LogAspect(typeof(FileLogger))]
         [CacheAspect(duration: 10)]
         public IDataResult<List<Product>> GetListByCategory(int categoryId)
@@ -50,47 +53,32 @@ namespace Business.Concrete
         }
 
 
-        //[ValidationAspect(typeof(ProductValidator), Priority = 1)]
-        //[CacheRemoveAspect("IProductService.Get")]
-        //[SecuredOperation("Editor")]
+        [ValidationAspect(typeof(ProductValidator), Priority = 1)]
+        [CacheRemoveAspect("IProductService.GetAllDetails")]
+        [SecuredOperation("Editor,Admin")]
         public IResult Add(Product product)
         {
             //status: active(1), renting(2), deactive(3)
+
+            IResult result = BusinessRules.Run(CheckIfProductNameExists(product.Title));
+
+            if (result != null)
+            {
+                return result;
+            }
+
             _productDal.Add(product);
             return new SuccessResult(Messages.ProductAdded);
         }
 
-
-
-        private IResult CheckIfProductNameExists(string title)
-        {
-
-            var result = _productDal.GetAll(p => p.Title == title).Any();
-            if (result)
-            {
-                return new ErrorResult(Messages.ProductNameAlreadyExists);
-            }
-
-            return new SuccessResult();
-        }
-
-        private IResult CheckIfCategoryIsEnabled()
-        {
-            var result = _categoryService.GetAll();
-            if (result.Data.Count<10)
-            {
-                return new ErrorResult(Messages.ProductNameAlreadyExists);
-            }
-
-            return new SuccessResult();
-        }
-
+        [CacheRemoveAspect("IProductService.GetAllDetails")]
         public IResult Delete(Product product)
         {
             _productDal.Delete(product);
             return new SuccessResult(Messages.ProductDeleted);
         }
 
+        [CacheRemoveAspect("IProductService.GetAllDetails")]
         public IResult Update(Product product)
         {
 
@@ -104,6 +92,59 @@ namespace Business.Concrete
             _productDal.Update(product);
             _productDal.Add(product);
             return new SuccessResult(Messages.ProductUpdated);
+        }
+
+        [CacheAspect]
+        public IDataResult<List<ProductDto>> GetAllDetails()
+        {
+            return new SuccessDataResult<List<ProductDto>>(_productDal.GetAllProductDetails());
+        }
+
+        public IDataResult<List<ProductDto>> GetAllDetailsByColor(int colorId)
+        {
+            return new SuccessDataResult<List<ProductDto>>(_productDal.GetAllProductDetails(p => p.ColorId == colorId));
+        }
+
+        public IDataResult<List<ProductDto>> GetAllDetailsByBrand(int brandId)
+        {
+            return new SuccessDataResult<List<ProductDto>>(_productDal.GetAllProductDetails(p => p.BrandId == brandId));
+        }
+
+        public IDataResult<List<ProductDto>> GetAllDetailsByCategory(int categoryId)
+        {
+            return new SuccessDataResult<List<ProductDto>>(_productDal.GetAllProductDetails(p => p.CategoryId == categoryId));
+        }
+
+        public IDataResult<List<ProductDto>> GetAllDetailsByColorAndBrand(int colorId, int brandId)
+        {
+            return new SuccessDataResult<List<ProductDto>>(_productDal.GetAllProductDetails().Where(x => x.BarandId == brandId && x.ColorId == colorId).ToList());
+        }
+
+        public IDataResult<List<ProductDto>> GetAllDetailsByBrandAndCategory(int brandId, int categoryId)
+        {
+            return new SuccessDataResult<List<ProductDto>>(_productDal.GetAllProductDetails().Where(x => x.BarandId == brandId && x.CategoryId == categoryId).ToList());
+        }
+
+        public IDataResult<List<ProductDto>> GetAllDetailsByColorAndCategory(int colorId, int categoryId)
+        {
+            return new SuccessDataResult<List<ProductDto>>(_productDal.GetAllProductDetails().Where(x => x.CategoryId == categoryId && x.ColorId == colorId).ToList());
+        }
+
+        public IDataResult<List<ProductDto>> GetAllDetailsByColorCategoryAndBrand(int colorId, int categoryId, int brandId)
+        {
+            return new SuccessDataResult<List<ProductDto>>(_productDal.GetAllProductDetails().Where(x => x.BarandId == brandId && x.ColorId == colorId && x.CategoryId == categoryId).ToList());
+        }
+
+        private IResult CheckIfProductNameExists(string title)
+        {
+
+            var result = _productDal.GetAll(p => p.Title == title).Any();
+            if (result)
+            {
+                return new ErrorResult(Messages.ProductNameAlreadyExists);
+            }
+
+            return new SuccessResult();
         }
     }
 }

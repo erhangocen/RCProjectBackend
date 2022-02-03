@@ -1,5 +1,9 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Transaction;
+using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -13,38 +17,24 @@ namespace Business.Concrete
     public class SaleManager : ISaleService
     {
         private ISaleDal _saleDal;
-        private ITokenService _tokenService;
-        private IProductService _productService;
+        private IPaymentService _paymentService;
 
-        public SaleManager(ISaleDal saleDal, ITokenService tokenService, IProductService productService)
+        public SaleManager(ISaleDal saleDal, IPaymentService paymentService)
         {
             _saleDal = saleDal;
-            _tokenService = tokenService;
-            _productService = productService;
+            _paymentService = paymentService;
         }
 
+        [CacheRemoveAspect("ISaleService.GetFullSaleDetailsByUserId")]
+        [TransactionScopeAspect]
         public IResult Add(Sale sale)
         {
-            Token t = _tokenService.GetByUserId(sale.UserId).Data;
-            Product p = _productService.GetById(sale.ProductId).Data;
-
-            if (t.TokenValue < p.SalePrice)
-            {
-                return new ErrorResult(Messages.InsufficientBalance);
-            }
-
-            Token token = new Token
-            {
-                Id = t.Id,
-                UserId = t.UserId,
-                TokenValue = t.TokenValue - p.SalePrice
-            };
-
-            _tokenService.Update(token);
+            _paymentService.PayForProduct(sale.UserId, sale.ProductId);
             _saleDal.Add(sale);
             return new SuccessResult(Messages.SaleAdd);
         }
 
+        [CacheRemoveAspect("ISaleService.GetFullSaleDetailsByUserId")]
         public IResult Delete(Sale sale)
         {
             _saleDal.Delete(sale);
@@ -65,12 +55,19 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<List<SaleDto>>(_saleDal.GetFullSaleDetails());
         }
+        
+        [CacheAspect]
+        public IDataResult<List<SaleDto>> GetFullSaleDetailsByUserId(int id)
+        {
+            return new SuccessDataResult<List<SaleDto>>(_saleDal.GetFullSaleDetails(p => p.UserId == id));
+        }
 
         public IDataResult<List<Sale>> GetSalesByUserId(int id)
         {
             return new SuccessDataResult<List<Sale>>(_saleDal.GetAll(p => p.UserId == id));
         }
 
+        [CacheRemoveAspect("ISaleService.GetFullSaleDetailsByUserId")]
         public IResult Update(Sale sale)
         {
             _saleDal.Update(sale);

@@ -58,10 +58,16 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<EfEvaluationDal>().As<IEvaluationDal>();
 
             builder.RegisterType<BidImageManager>().As<IBidImageService>();
-            builder.RegisterType<EfBidImageDal>().As<IBidImageDal>();
+            builder.RegisterType<EfBidImageDal>().As<IBidImageDal>(); 
+            
+            builder.RegisterType<FavoriteManager>().As<IFavoriteService>();
+            builder.RegisterType<EfFavoriteDal>().As<IFavoriteDal>();
 
             builder.RegisterType<TokenManager>().As<ITokenService>();
-            builder.RegisterType<EfTokenDal>().As<ITokenDal>();
+            builder.RegisterType<EfTokenDal>().As<ITokenDal>(); 
+            
+            builder.RegisterType<TokenOperationManager>().As<ITokenOperationService>();
+            builder.RegisterType<EfTokenOperationDal>().As<ITokenOperationDal>();
 
             builder.RegisterType<UserManager>().As<IUserService>();
             builder.RegisterType<EfUserDal>().As<IUserDal>();

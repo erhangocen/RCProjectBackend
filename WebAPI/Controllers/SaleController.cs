@@ -11,10 +11,10 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SalesController : ControllerBase
+    public class SaleController : ControllerBase
     {
         private ISaleService _saleService;
-        public SalesController(ISaleService saleService)
+        public SaleController(ISaleService saleService)
         {
             _saleService = saleService;
         }

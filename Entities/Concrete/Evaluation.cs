@@ -11,6 +11,7 @@ namespace Entities.Concrete
         public int BidId { get; set; }
         public int EvaluationValue { get; set; }
         public string Comment { get; set; }
+        public DateTime EvaluationDate { get; set; }
         public int Status { get; set; }
     }
 }

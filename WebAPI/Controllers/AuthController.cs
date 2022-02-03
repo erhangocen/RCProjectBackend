@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Entities.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,7 +14,7 @@ namespace WebAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        IAuthService _authService;
+        private  readonly IAuthService _authService;
 
         public AuthController(IAuthService authService)
         {
@@ -38,13 +39,13 @@ namespace WebAPI.Controllers
         [HttpPost("register")]
         public ActionResult Register(UserForRegisterDto userForRegisterDto)
         {
-            var userExist = _authService.UserExist(userForRegisterDto.Email);
+            var userExist = _authService.UserExist(userForRegisterDto.Email,userForRegisterDto.Username);
             if (!userExist.Success)
             {
                 return BadRequest(userExist.Message);
             }
-            var result = _authService.Register(userForRegisterDto, userForRegisterDto.Password);
 
+            var result = _authService.Register(userForRegisterDto, userForRegisterDto.Password);
             if (result.Success)
             {
                 return Ok(result);
@@ -64,5 +65,9 @@ namespace WebAPI.Controllers
             }
             return BadRequest(result);
         }
+
+        //[HttpPost]
+        //[AllowAnonymous]
+        //public async Task<IActionResult> 
     }
 }

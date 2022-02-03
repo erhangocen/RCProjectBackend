@@ -1,0 +1,26 @@
+﻿using Core.Entities;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Entities.Dtos
+{
+    public class BidDto : IDto
+    {
+        public int BidId { get; set; }
+        public int UserId { get; set; }
+        public string UserName { get; set; }
+        public string UserFullName { get; set; }
+        public int CatgoryId { get; set; }
+        public string CategoryName { get; set; }
+        public int BrandId { get; set; }
+        public string BrandName { get; set; }
+        public int ColorId { get; set; }
+        public string ColorName { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string BidValue { get; set; }
+        public DateTime BidDate { get; set; }
+        public string Status { get; set; }
+    }
+}

@@ -30,7 +30,7 @@ namespace DataAccess.Concrete.EntityFramework
                                  Price = p.SalePrice,
                                  SaleId = s.SaleId,
                                  UserId = u.UserId,
-                                 UserName = u.FirstName + u.LastName
+                                 UserName = u.Username
                              };
                 return result.ToList();
             }

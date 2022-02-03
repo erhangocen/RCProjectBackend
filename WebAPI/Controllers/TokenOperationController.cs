@@ -11,19 +11,19 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CreditCardsController : ControllerBase
+    public class TokenOperationController : ControllerBase
     {
-        ICreditCardSevice _creditCartService;
+        private ITokenOperationService _tokenOperationService;
 
-        public CreditCardsController(ICreditCardSevice creditCartSevice)
+        public TokenOperationController(ITokenOperationService tokenOperationService)
         {
-            _creditCartService = creditCartSevice;
+            _tokenOperationService = tokenOperationService;
         }
 
-        [HttpGet("getbyuser")]
-        public IActionResult GetByUser(int id)
+        [HttpGet("getall")]
+        public IActionResult GetAll()
         {
-            var result = _creditCartService.GetAllByUserId(id);
+            var result = _tokenOperationService.GetAll();
             if (result.Success)
             {
                 return Ok(result);
@@ -34,7 +34,18 @@ namespace WebAPI.Controllers
         [HttpGet("getbyid")]
         public IActionResult GetById(int id)
         {
-            var result = _creditCartService.GetById(id);
+            var result = _tokenOperationService.GetById(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("getbyuserid")]
+        public IActionResult GetByUserId(int id)
+        {
+            var result = _tokenOperationService.GetByUserId(id);
             if (result.Success)
             {
                 return Ok(result);
@@ -43,13 +54,15 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult Add(CreditCard creditCart)
+        public IActionResult Add(TokenOperation tokenOperation)
         {
-            var result = _creditCartService.Add(creditCart);
+            var result = _tokenOperationService.Add(tokenOperation);
+
             if (result.Success)
             {
                 return Ok(result);
             }
+
             return BadRequest(result);
         }
     }

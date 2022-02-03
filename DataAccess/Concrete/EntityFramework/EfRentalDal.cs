@@ -45,7 +45,7 @@ namespace DataAccess.Concrete.EntityFramework
                                  ProductTitle = p.Title,
                                  RentDate = r.RentDate,
                                  ReturnDate = r.ReturnDate,
-                                 UserName = u.FirstName + u.LastName,
+                                 UserName = u.Username,
                                  TotalPrice = Convert.ToInt32(((r.RentDate - r.RentDate).TotalDays)*p.RentPrice)
                              };
 

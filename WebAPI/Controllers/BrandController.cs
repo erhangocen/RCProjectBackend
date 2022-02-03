@@ -11,43 +11,41 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ColorsController : ControllerBase
+    public class BrandController : ControllerBase
     {
-        private IColorService _colorService;
-
-        public ColorsController(IColorService colorService)
+        private IBrandService _brandService;
+        public BrandController(IBrandService brandService)
         {
-            _colorService = colorService;
+            _brandService = brandService;
         }
 
         [HttpGet("getall")]
         public IActionResult GetAll()
         {
-            var result = _colorService.GetAll();
+            var result = _brandService.GetAll();
             if (result.Success)
             {
                 return Ok(result);
             }
-
             return BadRequest(result);
         }
 
-        [HttpGet("getbycolorid")]
-        public IActionResult GetByColorAll(int id)
+        [HttpGet("getbyid")]
+        public IActionResult GetById(int id)
         {
-            var result = _colorService.GetByColorId(id);
+            var result = _brandService.GetByBrandId(id);
             if (result.Success)
             {
                 return Ok(result);
             }
-
             return BadRequest(result);
         }
 
         [HttpPost("add")]
-        public IActionResult Add(Color color)
+        public IActionResult Add(Brand brand)
         {
-            var result = _colorService.Add(color);
+            var result = _brandService.Add(brand);
+
             if (result.Success)
             {
                 return Ok(result);
@@ -57,9 +55,10 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("update")]
-        public IActionResult Update(Color color)
+        public IActionResult Update(Brand brand)
         {
-            var result = _colorService.Update(color);
+            var result = _brandService.Update(brand);
+
             if (result.Success)
             {
                 return Ok(result);
@@ -69,9 +68,10 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("delete")]
-        public IActionResult Delete(Color color)
+        public IActionResult Delete(Brand brand)
         {
-            var result = _colorService.Delete(color);
+            var result = _brandService.Delete(brand);
+
             if (result.Success)
             {
                 return Ok(result);
@@ -79,5 +79,6 @@ namespace WebAPI.Controllers
 
             return BadRequest(result);
         }
+
     }
 }

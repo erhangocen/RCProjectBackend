@@ -10,6 +10,7 @@ namespace Entities.Dtos
         public int Id { get; set; }
         public int UserId { get; set; }
         public string FullName { get; set; }
+        public string Username { get; set; }
         public string ImagePath { get; set; }
         public string ContInfo { get; set; }
         public string Message { get; set; }

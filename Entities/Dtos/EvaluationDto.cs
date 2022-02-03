@@ -16,5 +16,6 @@ namespace Entities.Dtos
         public string BidTitle { get; set; }
         public string BidDescription { get; set; }
         public string EvaluationComment { get; set; }
+        public DateTime EvaluationDate { get; set; }
     }
 }

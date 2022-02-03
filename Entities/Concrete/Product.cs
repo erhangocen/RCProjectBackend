@@ -16,6 +16,7 @@ namespace Entities.Concrete
         public int SalePrice { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public DateTime AddDate { get; set; }
         public int Status { get; set; }
     }
 

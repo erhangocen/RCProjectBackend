@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Transaction;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
@@ -14,15 +15,13 @@ namespace Business.Concrete
 {
     public class AuthManager : IAuthService
     {
-        IUserService _userService;
-        ITokenHelper _tokenHelper;
-        IClaimService _claimService;
+        private readonly IUserService _userService;
+        private readonly ITokenHelper _tokenHelper;
 
-        public AuthManager(IUserService userService, ITokenHelper tokenHelper, IClaimService claimService)
+        public AuthManager(IUserService userService, ITokenHelper tokenHelper)
         {
             _userService = userService;
             _tokenHelper = tokenHelper;
-            _claimService = claimService;
         }
 
         public IDataResult<AccessToken> CreateAccessToken(User user)
@@ -57,13 +56,13 @@ namespace Business.Concrete
                 Email = userForRegisterDto.Email,
                 FirstName = userForRegisterDto.FirstName,
                 LastName = userForRegisterDto.LastName,
+                Username = userForRegisterDto.Username,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
                 Status = true
             };
 
-            _userService.Add(user);
-            _claimService.AddUser(user);
+            _userService.AddCustomer(user);
             return new SuccessDataResult<User>(user, Messages.SuccesRegister);
         }
 
@@ -78,11 +77,11 @@ namespace Business.Concrete
             return new SuccessDataResult<User>(user, Messages.SuccesUpdateUser);
         }
 
-        public IResult UserExist(string email)
+        public IResult UserExist(string email, string username)
         {
-            if (_userService.GetByMail(email).Data != null)
+            if (_userService.GetByMail(email).Data != null || _userService.GetByUsername(username).Data != null)
             {
-                return new ErrorDataResult<User>(Messages.UserAlredyExist);
+                return new ErrorResult(Messages.UserAlredyExist);
             }
             return new SuccessResult();
         }

@@ -1,5 +1,7 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Transaction;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using DataAccsess.Abstract;
@@ -14,56 +16,27 @@ namespace Business.Concrete
     public class ClaimManager : IClaimService
     {
         private IClaimDal _claimDal;
-        private ITokenService _tokenService;
 
         public ClaimManager(IClaimDal claimDal, ITokenService tokenService)
         {
             _claimDal = claimDal;
-            _tokenService = tokenService;
         }
 
+        [CacheRemoveAspect("IClaimService.GetAll")]
         public IResult Add(UserOperationClaim claim)
         {
             _claimDal.Add(claim);
             return new SuccessResult(Messages.AddClaim);
         }
 
-        public IResult AddEditor(User user)
-        {
-            UserOperationClaim claim = new UserOperationClaim()
-            {
-                OperationClaimId = 2,
-                UserId = user.UserId
-            };
-            _claimDal.Add(claim);
-            return new SuccessResult(Messages.AddClaim);
-        }
-
-        public IResult AddUser(User user)
-        {
-            UserOperationClaim claim = new UserOperationClaim()
-            {
-                OperationClaimId = 3,
-                UserId = user.UserId
-            };
-
-            Token token = new Token()
-            {
-                TokenValue = 0,
-                UserId = user.UserId
-            };
-
-            _claimDal.Add(claim);
-            _tokenService.Add(token);
-            return new SuccessResult(Messages.AddClaim);
-        }
-
+        [CacheRemoveAspect("IClaimService.GetAll")]
         public IResult Delete(UserOperationClaim claim)
         {
             _claimDal.Delete(claim);
             return new SuccessResult(Messages.DeleteClaim);
         }
 
+        [CacheRemoveAspect("IClaimService.GetAll")]
         public IResult DeleteUser(User user)
         {
             List<UserOperationClaim> claims = _claimDal.GetAll(c => c.UserId == user.UserId).ToList();
@@ -74,6 +47,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.DeleteClaim);
         }
 
+        [CacheAspect]
         public IDataResult<List<UserOperationClaim>> GetAll()
         {
             return new SuccessDataResult<List<UserOperationClaim>>(_claimDal.GetAll());
@@ -89,6 +63,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<UserOperationClaim>>(_claimDal.GetAll(c => c.UserId == id));
         }
 
+        [CacheRemoveAspect("IClaimService.GetAll")]
         public IResult Update(UserOperationClaim claim)
         {
             _claimDal.Update(claim);

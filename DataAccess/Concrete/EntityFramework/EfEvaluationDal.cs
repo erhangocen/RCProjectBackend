@@ -33,13 +33,13 @@ namespace DataAccess.Concrete.EntityFramework
                                  EvaluationComment = e.Comment,
                                  EvaluationId = e.Id,
                                  EvaluationValue = e.EvaluationValue,
-                                 UserName = u.FirstName + " " + u.LastName
+                                 UserName = u.Username,
+                                 EvaluationDate = e.EvaluationDate
                              };
                 return result.ToList();
 
             }
         }
-
         public List<EvaluationDto> GetEvaluationDetailsByUserId(Expression<Func<User, bool>> filter = null)
         {
             using (RCProjectDBContext context = new RCProjectDBContext())
@@ -59,11 +59,13 @@ namespace DataAccess.Concrete.EntityFramework
                                  EvaluationComment = e.Comment,
                                  EvaluationId = e.Id,
                                  EvaluationValue = e.EvaluationValue,
-                                 UserName = u.FirstName + " " + u.LastName
+                                 UserName = u.Username,
+                                 EvaluationDate = e.EvaluationDate
                              };
                 return result.ToList();
 
             }
         }
+
     }
 }

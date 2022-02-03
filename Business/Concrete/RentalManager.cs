@@ -1,6 +1,8 @@
 ﻿using Business.Abstract;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Business;
 using Core.Utilities.Results;
@@ -17,17 +19,17 @@ namespace Business.Concrete
     public class RentalManager : IRentalService
     {
         private IRentalDal _rentalDal;
-        private ITokenService _tokenService;
-        private IProductService _productService;
+        private IPaymentService _paymentService;
         
-        public RentalManager(IRentalDal rentalDal, ITokenService tokenService, IProductService productService)
+        public RentalManager(IRentalDal rentalDal, IPaymentService paymentService)
         {
             _rentalDal = rentalDal;
-            _tokenService = tokenService;
-            _productService = productService;
+            _paymentService = paymentService;
         }
 
+        [CacheRemoveAspect("IRentalService.GetFullRentalDetailsByUserId")]
         [ValidationAspect(typeof(RentalValidator))]
+        [TransactionScopeAspect]
         public IResult Add(Rental rental)
         {
             var result = BusinessRules.Run(IsRentable(rental));
@@ -36,22 +38,7 @@ namespace Business.Concrete
                 return result;
             }
 
-            Token t = _tokenService.GetByUserId(rental.UserId).Data;
-            Product p = _productService.GetById(rental.ProductId).Data;
-
-            if (t.TokenValue < p.SalePrice)
-            {
-                return new ErrorResult(Messages.InsufficientBalance);
-            }
-
-            Token token = new Token
-            {
-                Id = t.Id,
-                UserId = t.UserId,
-                TokenValue = t.TokenValue - p.SalePrice
-            };
-
-            _tokenService.Update(token);
+            _paymentService.PayForProduct(rental.UserId, rental.ProductId);
             _rentalDal.Add(rental);
             return new SuccessResult(Messages.RentalAdd);
         }
@@ -65,6 +52,8 @@ namespace Business.Concrete
             return new ErrorResult(Messages.RentalReturnDateError);
         }
 
+
+        [CacheRemoveAspect("IRentalService.GetFullRentalDetailsByUserId")]
         public IResult Delete(Rental rental)
         {
             _rentalDal.Delete(rental);
@@ -81,19 +70,20 @@ namespace Business.Concrete
             return new SuccessDataResult<List<RentalDto>>(_rentalDal.GetFullRentalDetails());
         }
 
+        [CacheAspect]
         public IDataResult<List<Rental>> GetRentalsByUserId(int id)
         {
             return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll(p => p.UserId == id));
         }
 
+        [CacheRemoveAspect("IRentalService.GetFullRentalDetailsByUserId")]
         public IResult Update(Rental rental)
         {
             _rentalDal.Update(rental);
             return new SuccessResult(Messages.RentalUpdate);
         }
 
-        [ValidationAspect(typeof(RentalValidator))]
-        public IResult IsRentable(Rental rental)
+        private IResult IsRentable(Rental rental)
         {
             var result = _rentalDal.GetAll(r => r.ProductId == rental.ProductId);
 
@@ -107,6 +97,12 @@ namespace Business.Concrete
         public IDataResult<Rental> GetRentalById(int id)
         {
             return new SuccessDataResult<Rental>(_rentalDal.Get(p => p.RentalId == id));
+        }
+
+        [CacheAspect]
+        public IDataResult<List<RentalDto>> GetFullRentalDetailsByUserId(int id)
+        {
+            return new SuccessDataResult<List<RentalDto>>(_rentalDal.GetFullRentalDetails(p => p.UserId == id));
         }
     }
 }

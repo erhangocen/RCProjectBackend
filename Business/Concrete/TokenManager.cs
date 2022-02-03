@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Core.Aspects.Autofac.Caching;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -19,12 +20,14 @@ namespace Business.Concrete
             _tokenDal = tokenDal;
         }
 
+        [CacheRemoveAspect("ITokenService.GetByUserId")]
         public IResult Add(Token token)
         {
             _tokenDal.Add(token);
             return new SuccessResult(Messages.TokenAdd);
         }
 
+        [CacheRemoveAspect("ITokenService.GetByUserId")]
         public IResult Delete(Token token)
         {
             _tokenDal.Delete(token);
@@ -41,15 +44,17 @@ namespace Business.Concrete
             return new SuccessDataResult<Token>(_tokenDal.Get(p => p.Id == id));
         }
 
+        [CacheAspect]
         public IDataResult<Token> GetByUserId(int id)
         {
             return new SuccessDataResult<Token>(_tokenDal.Get(p => p.UserId == id));
         }
 
+        [CacheRemoveAspect("ITokenService.GetByUserId")]
         public IResult Update(Token token)
         {
             _tokenDal.Update(token);   
-            return new SuccessResult(Messages.TokenUpdate);
+            return new SuccessResult(Messages.TokenUpdate); 
         }
     }
 }

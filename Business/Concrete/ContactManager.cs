@@ -1,5 +1,8 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -18,18 +21,22 @@ namespace Business.Concrete
             _contactDal = contactDal;
         }
 
+        [CacheRemoveAspect("IContactService.GetAll")]
+        [ValidationAspect(typeof(ContactValidtor))]
         public IResult Add(Contact contact)
         {
             _contactDal.Add(contact);
             return new SuccessResult(Messages.SendMessage);
         }
 
+        [CacheRemoveAspect("IContactService.GetAll")]
         public IResult Delete(Contact contact)
         {
             _contactDal.Delete(contact);
             return new SuccessResult(Messages.DeleteMessage);
         }
 
+        [CacheAspect]
         public IDataResult<List<Contact>> GetAll()
         {
             return new SuccessDataResult<List<Contact>>(_contactDal.GetAll());
