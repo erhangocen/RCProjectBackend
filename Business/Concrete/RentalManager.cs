@@ -39,7 +39,6 @@ namespace Business.Concrete
             }
 
             _paymentService.PayForProduct(rental.UserId, rental.ProductId);
-            rental.RentDate = DateTime.Today;
             _rentalDal.Add(rental);
             return new SuccessResult(Messages.RentalAdd);
         }

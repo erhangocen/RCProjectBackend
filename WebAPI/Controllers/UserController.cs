@@ -68,11 +68,11 @@ namespace WebAPI.Controllers
 
             return BadRequest(result);
         }
-        
-        [HttpPut("update")]
-        public IActionResult Update(User user)
+
+        [HttpPost("delete")]
+        public IActionResult Delete(User user)
         {
-            var result = _userService.Update(user);
+            var result = _userService.Delete(user);
             if (result.Success)
             {
                 return Ok(result);
@@ -80,11 +80,11 @@ namespace WebAPI.Controllers
 
             return BadRequest(result);
         }
-
-        [HttpDelete("delete")]
-        public IActionResult Delete(User user)
+        
+        [HttpPost("update")]
+        public IActionResult Update(User user)
         {
-            var result = _userService.Delete(user);
+            var result = _userService.Update(user);
             if (result.Success)
             {
                 return Ok(result);

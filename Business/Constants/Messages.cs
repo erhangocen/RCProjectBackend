@@ -84,8 +84,6 @@ namespace Business.Constants
         public static string AddProductImage = "a";
         public static string UpdateProductImage = "a";
         public static string DeleteProductImage = "a";
-        public static string BrandNameAlreadyExist = "a";
-        public static string DailyBidLimitIsFull = "daily limit (5)";
         internal static string SuccessCreateEditor;
         internal static string CreditCardDelete;
         internal static string CreditCardUpdate;
@@ -95,8 +93,9 @@ namespace Business.Constants
         internal static string FavoriteAdd;
         internal static string FavoriteDelete;
         internal static string FavoriteUpdate;
+        internal static string DailyBidLimitIsFull;
         internal static string CategoryNameAlreadyExist;
         internal static string ColorNameAlreadyExist;
-        
+        internal static string BrandNameAlreadyExist;
     }
 }

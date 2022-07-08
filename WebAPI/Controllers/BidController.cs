@@ -99,7 +99,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPut("update")]
+        [HttpPost("update")]
         public IActionResult Update(Bid bid)
         {
             var result = _bidService.Update(bid);
@@ -112,7 +112,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpDelete("delete")]
+        [HttpPost("delete")]
         public IActionResult Delete(Bid bid)
         {
             var result = _bidService.Delete(bid);
