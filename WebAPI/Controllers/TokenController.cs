@@ -67,7 +67,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("update")]
+        [HttpPut("update")]
         public IActionResult Update(Token token)
         {
             var result = _tokenService.Update(token);
@@ -80,7 +80,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("delete")]
+        [HttpDelete("delete")]
         public IActionResult Delete(Token token)
         {
             var result = _tokenService.Delete(token);

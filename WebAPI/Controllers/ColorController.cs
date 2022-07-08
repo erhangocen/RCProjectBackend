@@ -56,7 +56,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("update")]
+        [HttpPut("update")]
         public IActionResult Update(Color color)
         {
             var result = _colorService.Update(color);
@@ -68,7 +68,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("delete")]
+        [HttpDelete("delete")]
         public IActionResult Delete(Color color)
         {
             var result = _colorService.Delete(color);

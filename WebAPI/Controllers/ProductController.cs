@@ -156,7 +156,7 @@ namespace WebAPI.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpPost("update")]
+        [HttpPut("update")]
         public IActionResult Update(Product product)
         {
             var result = _productService.Update(product);
@@ -168,7 +168,7 @@ namespace WebAPI.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpPost("delete")]
+        [HttpDelete("delete")]
         public IActionResult Delete(Product product)
         {
             var result = _productService.Delete(product);

@@ -3,12 +3,14 @@ using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.Dtos;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Business.Concrete
@@ -27,6 +29,14 @@ namespace Business.Concrete
         [ValidationAspect(typeof(BidValidator))]
         public IResult Add(Bid bid)
         {
+            IResult result = BusinessRules.Run(CheckDailyLimit(bid.UserId));
+            
+            if (result != null)
+            {
+                return result;
+            }
+
+            bid.BidDate = DateTime.Today;
             _bidDal.Add(bid);
             return new SuccessResult(Messages.BidAdd);
         }
@@ -77,15 +87,15 @@ namespace Business.Concrete
         }
 
         
-        private IResult CheckDailyLimit(string title)
+        private IResult CheckDailyLimit(int userId)
         {
-            //burayı doldur
-            var result = false; 
-            if (result)
+            string dateNowAll = DateTime.Today.ToString();
+            string dateNow = dateNowAll.Split(' ')[0];
+            var result = _bidDal.GetAll(p => p.UserId == userId).FindAll(p=>p.BidDate.ToString().Split()[0] == dateNow).Count;
+            if (result == 5)
             {
                 return new ErrorResult(Messages.DailyBidLimitIsFull);
             }
-
             return new SuccessResult();
         }
     }

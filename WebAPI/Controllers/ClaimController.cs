@@ -68,7 +68,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("update")]
+        [HttpPut("update")]
         public IActionResult Update(UserOperationClaim claim)
         {
             var result = _claimService.Update(claim);
@@ -80,7 +80,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("delete")]
+        [HttpDelete("delete")]
         public IActionResult Delete(UserOperationClaim claim)
         {
             var result = _claimService.Delete(claim);

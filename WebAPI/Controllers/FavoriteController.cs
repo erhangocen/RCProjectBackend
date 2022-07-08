@@ -88,7 +88,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("update")]
+        [HttpPut("update")]
         public IActionResult Update(Favorite favorite)
         {
             var result = _favoriteService.Add(favorite);
@@ -101,7 +101,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("delete")]
+        [HttpDelete("delete")]
         public IActionResult Delete(Favorite favorite)
         {
             var result = _favoriteService.Add(favorite);

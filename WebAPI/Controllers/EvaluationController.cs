@@ -78,7 +78,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("update")]
+        [HttpPut("update")]
         public IActionResult Update(Evaluation evaluation)
         {
             var result = _evaluationService.Update(evaluation);
@@ -91,7 +91,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("delete")]
+        [HttpDelete("delete")]
         public IActionResult Delete(Evaluation evaluation)
         {
             var result = _evaluationService.Delete(evaluation);

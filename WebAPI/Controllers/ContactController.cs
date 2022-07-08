@@ -53,7 +53,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("delete")]
+        [HttpDelete("delete")]
         public IActionResult Delete(Contact contact)
         {
             var result = _contactService.Delete(contact);

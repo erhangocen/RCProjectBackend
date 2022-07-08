@@ -67,7 +67,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("delete")]
+        [HttpDelete("delete")]
         public IActionResult Delete([FromForm(Name = ("ImageId"))] int id)
         {
             var image = _profilePhotoService.GetById(id);
